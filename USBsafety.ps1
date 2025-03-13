@@ -1,6 +1,6 @@
 # Wait for USB detection
 
-$usbDevices = Get-WmiObject Win32_DiskDrive | Where-Object { $_.MediaType -eq "removable Media" }
+$usbDevices = Get-CimInstance Win32_DiskDrive | Where-Object { $_.MediaType -eq "removable Media" }
 
 
 if ($usbDevices) {
