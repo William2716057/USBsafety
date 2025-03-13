@@ -1,14 +1,12 @@
-# Wait for USB detection
+while ($true) {
+    $usbDevices = Get-CimInstance Win32_DiskDrive | Where-Object { $_.MediaType -eq "Removable Media" }
 
-$usbDevices = Get-CimInstance Win32_DiskDrive | Where-Object { $_.MediaType -eq "removable Media" }
-
-
-if ($usbDevices) {
+    if ($usbDevices) {
         Write-Host "USB detected"
-	$usbDevices | forEach-Object { Write-Host " - $($_.DeviceID) ($($_.Model))" }
-} else {
+        $usbDevices | ForEach-Object { Write-Host " - $($_.DeviceID) ($($_.Model))" }
+    } else {
         Write-Host "Waiting"
-	Start-Sleep -Seconds 5
-}
+    }
 
-#Start-Sleep -Seconds 20
+    Start-Sleep -Seconds 10
+}
