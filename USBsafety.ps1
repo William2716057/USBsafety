@@ -3,10 +3,36 @@ while ($true) {
 
     if ($usbDevices) {
         Write-Host "USB detected"
-        $usbDevices | ForEach-Object { Write-Host " - $($_.DeviceID) ($($_.Model))" }
+
+        foreach ($usb in $usbDevices) {
+            $partitions = Get-CimInstance Win32_DiskPartition | Where-Object { $_.DiskIndex -eq $usb.Index }
+            $logicalDisks = $partitions | ForEach-Object {
+                Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DeviceID -eq $_.DeviceID }
+            }
+
+            foreach ($disk in $logicalDisks) {
+                $filePath = Join-Path -Path $disk.DeviceID -ChildPath "test.txt"
+                
+                if (Test-Path $filePath) {
+                    Write-Host "'test.txt' found on $($disk.DeviceID)"
+                    $fileHash = Get-FileHash $filePath -Algorithm MD5
+
+                    # Compare the hash with the known value
+                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714"
+
+                    if ($fileHash.Hash -eq $expectedHash) {
+                        Write-Host "Hash matches"
+                    } else {
+                        Write-Host "test.txt hash does not match"
+                    }
+                } else {
+                    Write-Host "'test.txt' not found on $($disk.DeviceID)"
+                }
+            }
+        }
     } else {
         Write-Host "Waiting"
     }
 
-    Start-Sleep -Seconds 10
+    Start-Sleep -Seconds 5
 }
