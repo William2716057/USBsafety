@@ -17,13 +17,16 @@ while ($true) {
                     Write-Host "'test.txt' found on $($disk.DeviceID)"
                     $fileHash = Get-FileHash $filePath -Algorithm SHA256
 
-                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714"
+                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714g"
 
                     if ($fileHash.Hash -eq $expectedHash) {
                         Write-Host "Hash matches"
                     } else {
                         Write-Host "Hash does not match!"
 			Write-Host "Remove device immediately!"
+			$driveEject = New-Object -comObject Shell.Application
+			$driveEject.Namespace(17).ParseName("G:\").InvokeVerb("Eject")
+			Write-Host "Device Ejected"
                     }
                 } else {
                     Write-Host "'test.txt' not found on $($disk.DeviceID)"
