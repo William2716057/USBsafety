@@ -7,7 +7,7 @@ while ($true) {
         foreach ($usb in $usbDevices) {
             $partitions = Get-CimInstance Win32_DiskPartition | Where-Object { $_.DiskIndex -eq $usb.Index }
             $logicalDisks = $partitions | ForEach-Object {
-                Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DeviceID -eq $_.DeviceID }
+                Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 } # Removable drives only
             }
 
             foreach ($disk in $logicalDisks) {
@@ -15,15 +15,15 @@ while ($true) {
                 
                 if (Test-Path $filePath) {
                     Write-Host "'test.txt' found on $($disk.DeviceID)"
-                    $fileHash = Get-FileHash $filePath -Algorithm MD5
+                    $fileHash = Get-FileHash $filePath -Algorithm SHA256
 
-                    # Compare the hash with the known value
-                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714"
+                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714g"
 
                     if ($fileHash.Hash -eq $expectedHash) {
                         Write-Host "Hash matches"
                     } else {
-                        Write-Host "test.txt hash does not match"
+                        Write-Host "Hash does not match!"
+			Write-Host "Remove device immediately!"
                     }
                 } else {
                     Write-Host "'test.txt' not found on $($disk.DeviceID)"
