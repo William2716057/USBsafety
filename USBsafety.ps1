@@ -17,7 +17,7 @@ while ($true) {
                     Write-Host "'test.txt' found on $($disk.DeviceID)"
                     $fileHash = Get-FileHash $filePath -Algorithm SHA256
 
-                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714g"
+                    $expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714"
 
                     if ($fileHash.Hash -eq $expectedHash) {
                         Write-Host "Hash matches"
