@@ -19,57 +19,44 @@ It verifies its hash and automatically ejects the device if the hash does not ma
 
 ## 🚨 Limitations
 
-This script does not protect against malicious software if the USB device is accepted. It only verifies the presence and integrity of a designated file (test.txt).
+- This script does not protect against malicious software if the USB device is accepted. It only verifies the presence and integrity of a designated file (test.txt).
 
-🖥️ Installation
+### 🖥️ Installation
 
-Copy the provided PowerShell script into a .ps1 file (e.g., USBsafety.ps1).
+1. Copy the provided PowerShell script into a .ps1 file (e.g., USBsafety.ps1).
+2. Update the $expectedHash variable with the correct SHA256 hash value for your trusted test.txt file.
+```
+Get-FileHash G:\test.txt
+```
+3. Save the file.
 
-Update the $expectedHash variable with the correct SHA256 hash value for your trusted test.txt file.
+### ▶️ Usage
 
-$expectedHash = "9A30A503B2862C51C3C5ACD7FBCE2F1F784CF4658CCF8E87D5023A90C21C0714"
-
-Save the file.
-
-▶️ Usage
-
-Open PowerShell as Administrator.
-
-Navigate to the folder where the script is saved.
-
-Run the script with:
-
+1. Open PowerShell as Administrator.
+2. Navigate to the folder where the script is saved.
+3. Run the script with:
+```
 .\USBsafety.ps1
-
-🔍 Example Output
-
+```
+### 🔍 Example Output
+```
 USB detected
 'test.txt' found on G:\
 Hash does not match!
 Remove device immediately!
 Device Ejected
+```
+### ❗ Important Notes
 
-❗ Important Notes
+- Ensure the correct test.txt file is prepared in advance with the expected content and hash value.
+- The hash calculation may fail if test.txt is empty or corrupted.
+- While the script ejects unauthorized USBs, it cannot prevent malware if the USB is already trusted.
 
-Ensure the correct test.txt file is prepared in advance with the expected content and hash value.
+### 🛡️ Recommendations
 
-The hash calculation may fail if test.txt is empty or corrupted.
+#### For improved security, consider implementing:
 
-While the script ejects unauthorized USBs, it cannot prevent malware if the USB is already trusted.
+- 🔍 File system scanning tools for deeper threat detection.
 
-🛡️ Recommendations
-
-For improved security, consider implementing:
-
-🔍 File system scanning tools for deeper threat detection.
-
-🔒 Device control policies via Group Policy or endpoint security software.
-
-📝 License
-
-This project is licensed under the MIT License.
-
-📧 Contact
-
-For questions or improvements, please open an issue or submit a pull request.
+- 🔒 Device control policies via Group Policy or endpoint security software.
 
